@@ -11,8 +11,9 @@ namespace AutoWallpaper
 {
     class WebRegex
     {
-        public static string BAIDU = "ObjURL\":\"http.*?\"";
-        public static string BING = "";
+        //public static string BAIDU = "ObjURL\":\"http.*?\"";
+        public static string BAIDU = "http([^\"]*?)(\\.jpg)";
+        public static string BING = "(?<=(&quot;,&quot;murl&quot;:&quot;)).*?(?=(&quot;,&quot;turl&quot;:&quot;))";
     }
 
     class CollectFromWeb
@@ -20,6 +21,10 @@ namespace AutoWallpaper
         public List<string> GetURLs(string url, string strRegex)
         {
             var files = Hunter(url, strRegex).Result;
+            //for (int i = 0; i < files.Count; i++)
+            //{
+            //    Console.WriteLine("filename:" + files[i]);
+            //}
             return files;
         }
 
@@ -37,7 +42,11 @@ namespace AutoWallpaper
                 var cols = Regex.Matches(respBody, strRegex);
                 for (int i = 0; i < cols.Count; i++)
                 {
-                    fileList.Add(cols[i].Value.Replace("ObjURL\":\"", "").Replace("\"", "").Replace("\\/", "/"));
+                    string urlTemp = cols[i].Value.Replace("\\/", "/");
+                    if (!fileList.Contains(urlTemp))
+                    {
+                        fileList.Add(urlTemp);
+                    }
                 }
             }
             catch (Exception e)
