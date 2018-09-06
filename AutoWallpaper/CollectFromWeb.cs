@@ -33,9 +33,7 @@ namespace AutoWallpaper
                 HttpResponseMessage resp = await client.GetAsync(url);
                 resp.EnsureSuccessStatusCode();
                 string respBody = await resp.Content.ReadAsStringAsync();
-                //Console.WriteLine(respBody);
 
-                // get urls
                 var cols = Regex.Matches(respBody, strRegex);
                 for (int i = 0; i < cols.Count; i++)
                 {
@@ -50,37 +48,6 @@ namespace AutoWallpaper
             return fileList;
         }
 
-        //void Download(List<string>)
-        //{
-
-        //    //download
-        //    try
-        //    {
-        //        HttpClient client2 = new HttpClient();
-        //        //Console.WriteLine("req:" + result[i]);
-        //        Task<HttpResponseMessage> resp2 = client2.GetAsync(result[i]);
-        //        respList.Add(resp2);
-        //        //resp2.EnsureSuccessStatusCode();
-        //        //var bytes = await resp2.Content.ReadAsByteArrayAsync();
-
-        //        //if (!Directory.Exists("wallpaper"))
-        //        //{
-        //        //    Directory.CreateDirectory("wallpaper");
-        //        //}
-
-        //        //string filename = Directory.GetCurrentDirectory() + "\\wallpaper\\" + (i + ".jpg");
-        //        //Console.WriteLine("file downloading..........." + i);
-        //        //File.WriteAllBytes(filename, bytes);
-        //        //Console.WriteLine("file downloaded..........." + i);
-
-        //        //fileList.Add(filename);
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        //Console.WriteLine("req file error. " + e.Message);
-        //    }
-        //}
     }
 }
 

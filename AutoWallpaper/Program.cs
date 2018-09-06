@@ -18,13 +18,6 @@ namespace AutoWallpaper
             SimpleAsyncDownload down = new SimpleAsyncDownload();
             var files = down.Download(urls);
 
-
-
-            //ImageHunter ih = new ImageHunter();
-            //Task<List<string>> files = ih.Hunter();
-            //var a = files.Result;
-            //Console.WriteLine(a.Count);
-
         }
     }
 }

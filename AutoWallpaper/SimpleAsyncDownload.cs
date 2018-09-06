@@ -36,7 +36,7 @@ namespace AutoWallpaper
                 }
             }
 
-            // download
+            //save to files
             for (int i = 0; i < respList.Count; i++)
             {
                 try

@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CollectFromWeb.cs" />
-    <Compile Include="ImageHunter.cs" />
     <Compile Include="SimpleAsyncDownload.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
