@@ -63,6 +63,10 @@ namespace AutoWallpaper
                 {
                     Console.WriteLine("req ex: " + e.InnerException.Message);
                 }
+                catch (TaskCanceledException ex)
+                {
+                    Console.WriteLine("task cancel: " + ex.Message);
+                }
                 catch (System.Exception ex)
                 {
                     Console.WriteLine("resp error: " + ex.Message);
