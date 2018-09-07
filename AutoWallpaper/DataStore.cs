@@ -25,7 +25,7 @@ namespace AutoWallpaper
                     ss = JsonConvert.DeserializeObject<SimpleSetting>(json);
                 }
                 catch (Exception ex)
-                {
+                {                    
                     ss = new SimpleSetting();
                     Write(ss);
                 }

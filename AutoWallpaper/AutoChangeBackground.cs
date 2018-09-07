@@ -14,16 +14,14 @@ namespace AutoWallpaper
         //static int cur = 0;
         public static void Begin()
         {
-
-            var ret = RenewFiles();
-            if (!ret)
-            {
-                return;
-            }
-
             string path = Directory.GetCurrentDirectory();
             while (true)
             {
+                var ret = RenewFiles();
+                if (!ret)
+                {
+                    return;
+                }
                 var data = DataStore.Read();
                 if (data.stop)
                 {
