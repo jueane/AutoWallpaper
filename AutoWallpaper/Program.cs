@@ -35,14 +35,19 @@ namespace AutoWallpaper
                 int i = 0;
                 while (true)
                 {
-                    int begin = i * 35 + 1;
-                    int end = (i + 1) * 35;
 
-                    string urlBing = "https://cn.bing.com/images/async?q=" + keyword + "&first=" + begin + "&count=" + end + "&relp=35&qft=+filterui%3aimagesize-large&lostate=r&mmasync=1&dgState=x*0_y*0_h*0_c*3_i*36_r*9&IG=D0F95A9C4244401C9F17B60309634404&SFX=2&iid=images.5730";
+                    string urlBaidu = "https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&queryWord=%E7%BE%8E%E5%A5%B3%E5%86%99%E7%9C%9F+1920&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=0&word=%E7%BE%8E%E5%A5%B3%E5%86%99%E7%9C%9F+1920&s=&se=&tab=&width=&height=&face=0&istype=2&qc=&nc=1&fr=&pn=" + (30 * i) + "&rn=30&gsm=1e&1536347366095=";
+
+                    Collect(urlBaidu, WebRegex.BAIDU);
 
 
-                    //Collect(url, WebRegex.BAIDU);
-                    Collect(urlBing, WebRegex.BING);
+                    //int begin = i * 35 + 1;
+                    //int end = (i + 1) * 35;
+
+                    //string urlBing = "https://cn.bing.com/images/async?q=" + keyword + "&first=" + begin + "&count=" + end + "&relp=35&qft=+filterui%3aimagesize-large&lostate=r&mmasync=1&dgState=x*0_y*0_h*0_c*3_i*36_r*9&IG=D0F95A9C4244401C9F17B60309634404&SFX=2&iid=images.5730";
+
+                    //Collect(urlBing, WebRegex.BING);
+
 
                     Thread.Sleep(5000);
 
