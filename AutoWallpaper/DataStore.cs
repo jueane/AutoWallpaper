@@ -40,7 +40,7 @@ namespace AutoWallpaper
 
         public static void Write(SimpleSetting ss)
         {
-            var json = JsonConvert.SerializeObject(ss);
+            var json = JsonConvert.SerializeObject(ss,Formatting.Indented);
             File.WriteAllText(settingFilename, json);
         }
     }
