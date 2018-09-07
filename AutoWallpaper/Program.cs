@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Configuration;
 using System.Deployment.Application;
+using System.IO;
 
 namespace AutoWallpaper
 {
     class Program
     {
-        protected static void SimpleHandler(object sender,ConsoleCancelEventArgs args)
+        protected static void SimpleHandler(object sender, ConsoleCancelEventArgs args)
         {
             args.Cancel = true;
         }
@@ -25,9 +26,14 @@ namespace AutoWallpaper
 
                 string url = "https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&queryWord=%E5%A3%81%E7%BA%B8&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=0&word=%E5%A3%81%E7%BA%B8&s=&se=&tab=&width=&height=&face=0&istype=2&qc=&nc=1&fr=&cg=wallpaper&pn=0&rn=200&gsm=1e&1536227978695=";
 
-
-                string keyword = "美女1920%201080";
-                for (int i = 0; i < 20; i++)
+                string keyword = File.ReadAllText("keyword.txt");
+                if (string.IsNullOrWhiteSpace(keyword))
+                {
+                    keyword = "美女1920%201080";
+                }
+                Console.WriteLine("keyword: " + keyword);
+                int i = 0;
+                while (true)
                 {
                     int begin = i * 35 + 1;
                     int end = (i + 1) * 35;
@@ -39,6 +45,8 @@ namespace AutoWallpaper
                     Collect(urlBing, WebRegex.BING);
 
                     Thread.Sleep(5000);
+
+                    i++;
                 }
 
             }
@@ -48,13 +56,14 @@ namespace AutoWallpaper
             }
         }
 
+        static SimpleAsyncDownload down = new SimpleAsyncDownload();
+
         static void Collect(string url, string pattern)
         {
 
             var baidu = new CollectFromWeb();
             var urls = baidu.GetURLs(url, pattern);
 
-            SimpleAsyncDownload down = new SimpleAsyncDownload();
             down.Download(urls);
         }
     }
