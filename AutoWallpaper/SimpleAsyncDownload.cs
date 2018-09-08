@@ -43,45 +43,55 @@ namespace AutoWallpaper
             {
                 try
                 {
-                    Console.WriteLine("     .. waitfor: " + i);
-
-                    var img = await respList[i];
-                    if (!img.IsSuccessStatusCode)
+                    try
                     {
-                        Console.WriteLine("code: " + img.StatusCode);
-                        continue;
-                    }
-                    //img.EnsureSuccessStatusCode();
-                    var bytes = await img.Content.ReadAsByteArrayAsync();
-                    SaveToImage(bytes);
-                }
-                catch (WebException e)
-                {
-                    Console.WriteLine("web ex: " + e.InnerException.Message);
-                }
-                catch (HttpRequestException e)
-                {
-                    Console.WriteLine("req ex: " + e.InnerException.Message);
-                }
-                catch (TaskCanceledException ex)
-                {
-                    Console.WriteLine("task cancel: " + ex.Message);
-                }
-                catch (System.Exception ex)
-                {
-                    Console.WriteLine("resp error: " + ex.Message);
+                        Console.WriteLine("     .. waitfor: " + i);
 
-                    Console.WriteLine("" + respList[i].Result.RequestMessage.RequestUri.AbsoluteUri);
+                        var imgResp = await respList[i];
+                        if (!imgResp.IsSuccessStatusCode)
+                        {
+                            Console.WriteLine("code: " + imgResp.StatusCode);
+                            continue;
+                        }
+                        //img.EnsureSuccessStatusCode();
+                        var bytes = await imgResp.Content.ReadAsByteArrayAsync();
+
+                        SaveToImage(bytes, imgResp.RequestMessage.RequestUri.AbsoluteUri);
+                    }
+                    catch (WebException e)
+                    {
+                        Console.WriteLine("web ex: " + e.InnerException.Message);
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        Console.WriteLine("req ex: " + e.InnerException.Message);
+                        Console.WriteLine("uri: " + respList[i].Result.RequestMessage.RequestUri.AbsoluteUri);
+                    }
+                    catch (TaskCanceledException ex)
+                    {
+                        Console.WriteLine("task cancel: " + ex.Message);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Console.WriteLine("resp error: " + ex.Message);
+
+                        Console.WriteLine("" + respList[i].Result.RequestMessage.RequestUri.AbsoluteUri);
+                    }
+
+
+                }
+                catch (AggregateException ex)
+                {
+                    Console.WriteLine("...---");
                 }
             }
 
             Console.WriteLine("total: " + respList.Count);
         }
 
-        List<bool[]> imgHashList = new List<bool[]>();
 
         static int c = 0;
-        public void SaveToImage(byte[] bytes)
+        public void SaveToImage(byte[] bytes, string uri)
         {
             //保存
             var imgstream = new MemoryStream(bytes);
@@ -90,9 +100,13 @@ namespace AutoWallpaper
             if (img.Width >= 1920 && img.Height >= 1080)
             {
                 //记录hash
-                if (IsExist(img))
+                var hash = CalculateHash(img);
+                var existHash = FindExist(hash);
+                if (existHash != null)
                 {
-                    Console.WriteLine("exist");
+                    Console.WriteLine("repeat");
+                    Console.WriteLine("filename: " + existHash.file);
+                    Console.WriteLine("uri: " + existHash.uri);
                     return;
                 }
 
@@ -100,15 +114,32 @@ namespace AutoWallpaper
                 {
                     Directory.CreateDirectory("wallpaper");
                 }
-                string filename = Directory.GetCurrentDirectory() + "\\wallpaper\\" + (c++ + ".jpg");
-                File.WriteAllBytes(filename, bytes);
-                Console.WriteLine("witefile: " + filename);
-                //Console.WriteLine("file downloaded..........." + c);
+                string filename = (c++ + ".jpg");
+                string filepath = Directory.GetCurrentDirectory() + "\\wallpaper\\" + filename;
 
+                File.WriteAllBytes(filepath, bytes);
+                Console.WriteLine("witefile: " + filepath);
+
+                //不存在则创建
+                var hInfo = new HashInfo
+                {
+                    file = filename,
+                    hash = hash,
+                    uri = uri
+                };
+                imgHashList.Add(hInfo);
             }
         }
 
-        bool IsExist(Image img)
+        List<HashInfo> imgHashList = new List<HashInfo>();
+        class HashInfo
+        {
+            public string file;
+            public string uri;
+            public bool[] hash;
+        }
+
+        bool[] CalculateHash(Image img)
         {
             bool[] hash = new bool[16 * 16];
             Bitmap bmp = new Bitmap(img, new Size(16, 16));
@@ -120,11 +151,16 @@ namespace AutoWallpaper
                     hash[pos] = bmp.GetPixel(j, i).GetBrightness() < 0.5;
                 }
             }
+            return hash;
+        }
+
+        HashInfo FindExist(bool[] hash)
+        {
             //与每个hash比较
             var hItr = imgHashList.GetEnumerator();
             while (hItr.MoveNext())
             {
-                var curHash = hItr.Current;
+                var curHash = hItr.Current.hash;
                 for (int i = 0; i < hash.Length; i++)
                 {
                     if (curHash[i] != hash[i])
@@ -136,31 +172,25 @@ namespace AutoWallpaper
                         // they are same
                         if (i == hash.Length - 1)
                         {
-                            Console.WriteLine("repeat");
-                            return true;
+                            return hItr.Current;
                         }
                     }
                 }
             }
-
-            //if (imgHashList.Contains(hash))
+            //打印hash
+            //for (int i = 0; i < hash.Length; i++)
             //{
-            //    return true;
+            //    if (hash[i])
+            //    {
+            //        Console.Write(".");
+            //    }
+            //    else
+            //    {
+            //        Console.Write("-");
+            //    }
             //}
-            for (int i = 0; i < hash.Length; i++)
-            {
-                if (hash[i])
-                {
-                    Console.Write(".");
-                }
-                else
-                {
-                    Console.Write("-");
-                }
-            }
-            Console.WriteLine();
-            imgHashList.Add(hash);
-            return false;
+            //Console.WriteLine();
+            return null;
         }
     }
 }

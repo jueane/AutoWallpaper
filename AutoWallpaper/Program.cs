@@ -36,7 +36,7 @@ namespace AutoWallpaper
                 while (true)
                 {
 
-                    string urlBaidu = "https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&queryWord=%E7%BE%8E%E5%A5%B3%E5%86%99%E7%9C%9F+1920&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=0&word=%E7%BE%8E%E5%A5%B3%E5%86%99%E7%9C%9F+1920&s=&se=&tab=&width=&height=&face=0&istype=2&qc=&nc=1&fr=&pn=" + (30 * i) + "&rn=30&gsm=1e&1536347366095=";
+                    string urlBaidu = "https://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&queryWord=" + keyword + "&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&z=&ic=0&word=" + keyword + "&s=&se=&tab=&width=&height=&face=0&istype=2&qc=&nc=1&fr=&pn=" + (30 * i) + "&rn=30&gsm=1e&1536347366095=";
 
                     Collect(urlBaidu, WebRegex.BAIDU);
 
