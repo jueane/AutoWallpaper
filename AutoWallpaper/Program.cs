@@ -55,6 +55,24 @@ namespace AutoWallpaper
                 }
 
             }
+            else if (args.Length != 0 && args[0].Equals("-r"))
+            {
+                var d = DataStore.Read();
+                var path = d.currentImage;
+                var dir = path.Substring(0, path.LastIndexOf("\\") + 1);
+                var filename = path.Substring(path.LastIndexOf("\\") + 1);
+
+                var destpath = "Deleted\\" + dir;
+
+                Console.WriteLine("a: " + destpath);
+                Console.WriteLine("b: " + filename);
+
+                Directory.CreateDirectory(destpath);
+
+                if (File.Exists(path))
+                    //File.Delete(d.currentImage);
+                    File.Move(path, destpath + filename);
+            }
             else
             {
                 AutoChangeBackground.Begin();
